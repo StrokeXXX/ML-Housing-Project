@@ -1,0 +1,36 @@
+name: MLOps Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: pytest tests/
+
+  train:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Train model
+        run: python src/model_training.py
+      - name: Register model
+        run: mlflow models register-model
+
+  deploy:
+    needs: train
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cloud: [aws, gcp, azure]
+    steps:
+      - name: Deploy to ${{ matrix.cloud }}
+        run: |
+          cd terraform/${{ matrix.cloud }}
+          terraform apply -auto-approve
