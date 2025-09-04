@@ -1,0 +1,11 @@
+# Configuration MLflow
+tracking_uri: "http://mlflow:5000"  # Utilisez un serveur MLflow dédié
+experiment_name: "housing-price-prediction"
+artifact_location: "s3://housing-mlops-artifacts"  # Stockage cloud
+
+# Configuration du registry de modèles
+model_registry:
+  uri: "databricks"  # ou "mlflow" pour le registry standard
+  stages:
+    dev: "Staging"
+    prod: "Production"
