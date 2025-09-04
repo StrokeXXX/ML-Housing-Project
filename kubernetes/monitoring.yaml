@@ -1,0 +1,15 @@
+# Prometheus config
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: model-monitoring
+  labels:
+    app: housing-model
+spec:
+  selector:
+    matchLabels:
+      app: housing-model
+  endpoints:
+  - port: http
+    interval: 15s
+    path: /metrics
